@@ -405,16 +405,17 @@ document.getElementById('go').onclick = () =>
     document.getElementById('end').value
   );
 
-const toggleBordersBtn = document.getElementById('toggleBorders');
-if (toggleBordersBtn) {
-  toggleBordersBtn.addEventListener('click', () => {
-    bordersGroup.visible = !bordersGroup.visible;
-  });
-}
+// const toggleBordersBtn = document.getElementById('toggleBorders');
+// if (toggleBordersBtn) {
+//   toggleBordersBtn.addEventListener('click', () => {
+//     bordersGroup.visible = !bordersGroup.visible;
+//   });
+// }
 
 const toggleCountriesBtn = document.getElementById('toggleCountries');
 if (toggleCountriesBtn) {
   toggleCountriesBtn.addEventListener('click', () => {
+    bordersGroup.visible = !bordersGroup.visible;
     countryLabelsGroup.visible = !countryLabelsGroup.visible;
     // Wenn Labels wieder sichtbar werden: reprojecte Positionen und aktualisiere Sichtbarkeit
     if (countryLabelsGroup.visible) {
