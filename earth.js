@@ -498,9 +498,14 @@ function updateAllLabelScale() {
 
 /* ---------------- Resize ---------------- */
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  renderer.setSize(width, height, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 /* ---------------- Animation ---------------- */
