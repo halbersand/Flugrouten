@@ -1,74 +1,38 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>3D Erde – Flugroute</title>
-<style>
-body { margin: 0; overflow: hidden; background: black; }
+  <meta charset="UTF-8" />
+  <title>3D Erde – Flugroute</title>
 
-#ui {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0,0,0,0.6);
-  padding: 10px;
-  color: rgb(255, 255, 255);
-  font-family: Arial;
-  border-radius: 6px;
-  font-size: 16px;
-}
+  <!-- 🔴 WICHTIG gegen Mobile-Zoom-Probleme -->
+  <meta name="viewport"
+        content="width=device-width, height=device-height,
+                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-input {
-  width: 120px;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  border-radius: 6px;
-  font-size: 20px;
-  background-color: rgb(87, 71, 71);
-  color: rgb(251, 253, 255);
-  padding: 4px;
-}
-
-button {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  padding: 6px 4px;
-  border-radius: 6px;
-  font-size: 20px;
-  background-color: rgb(87, 71, 71);
-  color: rgb(251, 253, 255);
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: rgb(110, 90, 90);
-}
-
-#dist {
-  margin-top: 10px;
-  margin-top: 10px;
-  font-size: 20px;
-  color: rgb(150, 200, 255);
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="ui">
-  Start:<br>
-  <input id="start" value="Frankfurt"><br>
-  Ziel:<br>
-  <input id="end" value="Tokyo"><br>
-  <button id="go">Route zeichnen</button>
-  
-  <button id="toggleCountries">Länder</button>
-  <div id="dist"></div>
-</div>
+  <!-- 3D Szene -->
+  <div id="scene"></div>
 
-<script type="module" src="./earth.js"></script>
+  <!-- UI Overlay -->
+  <div id="ui">
+    <label>Start</label>
+    <input id="start" type="text" value="Frankfurt">
+
+    <label>Ziel</label>
+    <input id="end" type="text" value="Tokyo">
+
+    <button id="go">Route</button>
+
+    <button id="toggleCountries">Länder</button>
+    <div id="dist"></div>
+  </div>
+
+  <!-- Three.js App -->
+  <script type="module" src="./earth.js"></script>
+
 </body>
 </html>

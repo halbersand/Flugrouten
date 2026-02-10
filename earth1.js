@@ -3,7 +3,6 @@ import { OrbitControls } from './OrbitControls.js';
 
 import getStarfield from "./getStarfield.js";
 
-const container = document.getElementById('scene');
 
 
 
@@ -14,31 +13,14 @@ const container = document.getElementById('scene');
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
-  60,
-  container.clientWidth / container.clientHeight,
-  0.1,
-  1000
+  60, window.innerWidth / window.innerHeight, 0.1, 1000
 );
 camera.position.set(0, 0, 3);
 
-/* ---------------- Renderer (WICHTIG: zuerst!) ---------------- */
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(container.clientWidth, container.clientHeight);
-container.appendChild(renderer.domElement);
-
-/* ---------------- Resize ---------------- */
-function resizeRenderer() {
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w, h);
-}
-
-window.addEventListener('resize', resizeRenderer);
-
+document.body.appendChild(renderer.domElement);
 
 //const colorsun = new THREE.Color("rgba(121, 175, 219, 1)");
 /* ---------------- Licht ---------------- */
@@ -518,6 +500,18 @@ function updateAllLabelScale() {
 
 
 
+/* ---------------- Resize ---------------- */
+window.addEventListener('resize', () => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(width, height, false);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+
 
 
 
@@ -539,3 +533,6 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+
+
