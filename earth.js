@@ -416,7 +416,7 @@ async function drawRoute(startName, endName) {
   earth.add(routeLine);
 
   document.getElementById('dist').innerHTML =
-    `<br>Distanz: ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
+    `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
 }
 
 /* ---------------- UI ---------------- */

@@ -1,81 +1,66 @@
-/* ===============================
-   GLOBAL RESET
-   =============================== */
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
-  font-family: Arial, Helvetica, sans-serif;
-  background: black;
+  font-family: Arial, sans-serif;
 }
 
-/* ===============================
-   THREE.JS CANVAS / SCENE
-   =============================== */
+/* 3D Szene */
 #scene {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   z-index: 0;
 }
 
-/* Wichtig gegen ovale Kugel */
-canvas {
-  display: block;
-  width: 100vw !important;
-  height: 100vh !important;
-}
-
-/* ===============================
-   UI TOOLBAR (GLOBAL)
-   =============================== */
+/* Toolbar */
 #ui {
+  height: 36px;
   position: fixed;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 10;
+
   display: flex;
-  gap: 8px;
-  padding: 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+
+  padding: 6px 8px;
   background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(6px);
   border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+
+  max-width: calc(100vw - 16px);
 }
 
-/* ===============================
-   UI ELEMENTE
-   =============================== */
-#ui input,
-#ui button {
-  padding: 6px 10px;
-  font-size: 14px;
+
+
+
+
+
+/* Inputs */
+#ui input {
+  width: 60px;              /* 🔑 schmal */
+  max-width: 30vw;          /* 🔑 Mobile */
+  padding: 6px 8px;
+  font-size: 13px;
   border-radius: 6px;
   border: none;
-  outline: none;
 }
 
-#ui input {
-  width: 120px;
-}
-
-#ui label {
-  font-size: 14px;
-  opacity: 0.8;
-}
-
+/* Button */
 #ui button {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
   background: #2196f3;
   color: white;
   cursor: pointer;
   white-space: nowrap;
 }
 
-#ui button:hover {
-  background: #1976d2;
-}
-
+/* Distanz */
 #dist {
   color: white;
   font-size: 18px;
@@ -85,38 +70,20 @@ canvas {
   white-space: nowrap;
 }
 
-/* ===============================
-   DESKTOP LAYOUT
-   =============================== */
-@media (min-width: 768px) {
-  #ui {
-    top: 12px;
-    left: 12px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
 
-/* ===============================
-   MOBILE LAYOUT
-   =============================== */
-@media (max-width: 767px) {
-  #ui {
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    flex-direction: row;
-    align-items: center;
-  }
 
+
+/* 📱 sehr kleine Displays */
+@media (max-width: 420px) {
   #ui input {
-    width: 110px;
-    font-size: 13px;
+    width: 70px;
+    font-size: 12px;
   }
 
   #ui button {
-    font-size: 13px;
     padding: 6px 8px;
+    font-size: 12px;
   }
-}
 
+  
+}
