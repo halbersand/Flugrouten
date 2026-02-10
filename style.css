@@ -57,7 +57,7 @@ canvas {
 }
 
 #ui input {
-  width: 100px;
+  width: 120px;
 }
 
 #ui label {
@@ -74,6 +74,15 @@ canvas {
 
 #ui button:hover {
   background: #1976d2;
+}
+
+#dist {
+  color: white;
+  font-size: 18px;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 /* ===============================
