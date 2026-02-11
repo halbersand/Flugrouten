@@ -14,20 +14,21 @@ html, body {
 
 /* Toolbar */
 #ui {
+  
   height: 36px;
   position: fixed;
   top: 6px;
-  left: 40%;
+  left: 50%;
   transform: translateX(-50%);
   z-index: 10;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1px;
-
-  padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.55);
+  gap: 4px;
+  
+  padding: 2px 4px;
+  background: rgba(227, 226, 209, 0.55);
   border-radius: 10px;
 
   max-width: calc(100vw - 16px);
@@ -40,26 +41,32 @@ html, body {
 
 /* Inputs */
 #ui input {
-  width: 60px;              /* 🔑 schmal */
+ 
+  width: 80px;              /* 🔑 schmal */
   max-width: 30vw;          /* 🔑 Mobile */
-  padding: 6px 8px;
-  font-size: 13px;
+  padding: 6px 2px;
+  font-size: 15px;
   border-radius: 6px;
   border: none;
 }
 
 /* Button */
 #ui button {
-  padding: 6px 10px;
-  font-size: 13px;
+  
+  padding: 6px 4px;
+  font-size: 15px;
   border-radius: 6px;
   border: none;
-  background: #2196f3;
+  background: #105995;
   color: white;
+ 
   cursor: pointer;
   white-space: nowrap;
 }
 
+#ui button:hover {
+  background: rgb(29, 154, 227);
+}
 /* Distanz */
 /* #dist {
   
@@ -90,6 +97,7 @@ html, body {
   #ui input {
     width: 70px;
     font-size: 12px;
+    
   }
 
   #ui button {
