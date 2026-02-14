@@ -19,13 +19,38 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
+
+
+
 camera.position.set(0, 0, 3);
 
 /* ---------------- Renderer (WICHTIG: zuerst!) ---------------- */
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(container.clientWidth, container.clientHeight);
-container.appendChild(renderer.domElement);
+ renderer.setPixelRatio(window.devicePixelRatio);
+ 
+ container.appendChild(renderer.domElement);
+
+
+
+/* ---------------- Controls ---------------- */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.enableZoom = true;
+controls.enableRotate = true;
+controls.screenSpacePanning = false;
+controls.minDistance = 1.5;
+controls.maxDistance = 6;
+
+
+let camStart = new THREE.Vector3();
+let camEnd = new THREE.Vector3();
+let camProgress = 1; // 1 = keine Animation
+let camDuration = 1.2; // Sekunden
+
+
+
 
 /* ---------------- Resize ---------------- */
 function resizeRenderer() {
@@ -38,6 +63,8 @@ function resizeRenderer() {
 }
 
 window.addEventListener('resize', resizeRenderer);
+
+
 
 
 //const colorsun = new THREE.Color("rgba(121, 175, 219, 1)");
@@ -277,10 +304,8 @@ fetch('./countries.geojson')
 const starfield = getStarfield({ numStars: 1000 });
 scene.add(starfield);
 
-/* ---------------- Controls ---------------- */
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
+
+
 
 /* ---------------- Hilfsfunktionen ---------------- */
 function latLonToVec3(lat, lon, r = 1.01) {
@@ -392,13 +417,30 @@ async function geocode(place) {
 let routeLine = null;
 let objects = [];
 
+let start=null;
+let end=null;
+
+// function getRouteCenter(lat1, lon1, lat2, lon2) {
+//     const v1 = latLonToVec3(lat1, lon1, 1);
+//     const v2 = latLonToVec3(lat2, lon2, 1);
+
+//     return v1.clone().add(v2).multiplyScalar(0.5).normalize();
+// }
+
+
+
+
+
+
 async function drawRoute(startName, endName) {
   objects.forEach(o => earth.remove(o));
   objects = [];
   if (routeLine) earth.remove(routeLine);
-
   const A = await geocode(startName);
   const B = await geocode(endName);
+  start=A;
+  end=B;
+  
 
   const pA = latLonToVec3(A.lat, A.lon);
   const pB = latLonToVec3(B.lat, B.lon);
@@ -417,6 +459,7 @@ async function drawRoute(startName, endName) {
 
   document.getElementById('dist').innerHTML =
     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
+ focusCameraOnRoute(start, end);   
 }
 
 /* ---------------- UI ---------------- */
@@ -424,7 +467,16 @@ document.getElementById('go').onclick = () =>
   drawRoute(
     document.getElementById('start').value,
     document.getElementById('end').value
+    
   );
+
+
+
+
+  
+//focusCameraOnRoute(start, end);
+
+
 
 // const toggleBordersBtn = document.getElementById('toggleBorders');
 // if (toggleBordersBtn) {
@@ -517,17 +569,56 @@ function updateAllLabelScale() {
 }
 
 
+// function focusCameraOnRoute(start, end) {  
+//    const v1 = latLonToVec3(start.lat, start.lon, 1).normalize();
+//   const v2 = latLonToVec3(end.lat, end.lon, 1).normalize();
+//   const center = v1.clone().add(v2).normalize();
+//     // 🎯 Zielpunkt setzen
+//     //controls.target.copy(center);
+//     const distance = 3;   
+//     camera.position.copy(center.clone().multiplyScalar(distance)); 
+//     // 🔑 OrbitControls synchronisieren
+//     controls.update();   
+//}
 
+function focusCameraOnRoute(start, end) {
 
+  const v1 = latLonToVec3(start.lat, start.lon, 1).normalize();
+  const v2 = latLonToVec3(end.lat, end.lon, 1).normalize();
 
+  const mid = v1.clone().add(v2).normalize();
 
+  // Distanz abhängig von Route
+  const angle = v1.angleTo(v2);
+  const zoom = 2.5 + angle;  // automatische Entfernung
+
+  camStart.copy(camera.position);
+  camEnd.copy(mid.multiplyScalar(zoom));
+
+  camProgress = 0; // Animation starten
+}
+
+const clock = new THREE.Clock();
 
 /* ---------------- Animation ---------------- */
 function animate() {
   requestAnimationFrame(animate);
-  earth.rotation.y += 0.000;
-  controls.update();
+
+  const delta = clock.getDelta();
+
+  // Kamera-Transition
+  if (camProgress < 1) {
+
+    camProgress += delta / camDuration;
+    if (camProgress > 1) camProgress = 1;
+
+    camera.position.lerpVectors(camStart, camEnd, camProgress);
+
+  }
+
+
   
+
   // Aktualisiere Label-Sichtbarkeit und -Größe basierend auf Zoom-Niveau
   if (countryLabelsGroup.visible) {
     updateCountryLabelVisibility();
@@ -535,7 +626,9 @@ function animate() {
   
   // Aktualisiere die Größe aller Route-Labels
   updateAllLabelScale();
+  controls.update();
   
   renderer.render(scene, camera);
+  
 }
 animate();
