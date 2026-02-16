@@ -79,9 +79,10 @@ const earth = new THREE.Mesh(
   new THREE.SphereGeometry(1, 64, 64),
   new THREE.MeshStandardMaterial({
     map: new THREE.TextureLoader().load('./earth.jpg')
-  })
+  ,transparent:true,opacity:0.7})
 );
 scene.add(earth);
+
 
 /* ---------------- Atmosphäre ---------------- */
 function addAtmosphere(radius, opacity,color) {
@@ -124,6 +125,50 @@ const alwaysVisibleList = [
   // 'vanuatu',
   // 'palau'
 ];
+
+function addGlobeGrid(radius = 1) {
+
+  const material = new THREE.LineBasicMaterial({
+    color: 0x888888,
+    transparent: true,
+    opacity: 0.4
+  });
+
+  const segments = 128;
+
+  // Breitenkreise
+  for (let lat = -75; lat <= 75; lat += 15) {
+
+    const points = [];
+
+    for (let lon = 0; lon <= 360; lon += 360 / segments) {
+      points.push(latLonToVec3(lat, lon, radius * 1.001));
+    }
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const circle = new THREE.Line(geometry, material);
+    earth.add(circle);
+  }
+
+  // Meridiane
+  for (let lon = 0; lon < 360; lon += 15) {
+
+    const points = [];
+
+    for (let lat = -90; lat <= 90; lat += 180 / segments) {
+      points.push(latLonToVec3(lat, lon, radius * 1.001));
+    }
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, material);
+    earth.add(line);
+  }
+}
+
+
+addGlobeGrid(1);
+
+
 
 
 function createCountryLabel(name, lat, lon, countrySize) {
@@ -336,6 +381,18 @@ function greatCirclePoints(lat1, lon1, lat2, lon2, segments = 256) {
   return pts;
 }
 
+function straightLatLonLine(lat1, lon1, lat2, lon2, segments = 64) {
+  const pts = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const lat = lat1 + (lat2 - lat1) * t;
+    const lon = lon1 + (lon2 - lon1) * t;
+    pts.push(latLonToVec3(lat, lon));
+  }
+  return pts;
+}
+
+
 function distance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const toRad = d => d * Math.PI / 180;
@@ -415,6 +472,7 @@ async function geocode(place) {
 
 /* ---------------- Route ---------------- */
 let routeLine = null;
+let straightLine = null;
 let objects = [];
 
 let start=null;
@@ -436,6 +494,7 @@ async function drawRoute(startName, endName) {
   objects.forEach(o => earth.remove(o));
   objects = [];
   if (routeLine) earth.remove(routeLine);
+  if (straightLine) earth.remove(straightLine);
   const A = await geocode(startName);
   const B = await geocode(endName);
   start=A;
@@ -451,11 +510,21 @@ async function drawRoute(startName, endName) {
   objects.push(createLabel(endName, pB));
 
   const pts = greatCirclePoints(A.lat, A.lon, B.lat, B.lon);
+  const pts2 = straightLatLonLine(A.lat, A.lon, B.lat, B.lon);
+
   routeLine = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(pts),
     new THREE.LineBasicMaterial({ color: 0xff0000 })
   );
   earth.add(routeLine);
+
+
+  straightLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(pts2),
+    new THREE.LineBasicMaterial({ color: 0xff0000 })
+  );
+  earth.add(straightLine);
+
 
   document.getElementById('dist').innerHTML =
     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
