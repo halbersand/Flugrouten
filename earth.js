@@ -69,7 +69,7 @@ window.addEventListener('resize', resizeRenderer);
 
 //const colorsun = new THREE.Color("rgba(121, 175, 219, 1)");
 /* ---------------- Licht ---------------- */
-scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+scene.add(new THREE.AmbientLight(0xffffff, 1.2));
 const sun = new THREE.DirectionalLight(0xffffff, 1.4);
 sun.position.set(5, 3, 5);
 scene.add(sun);
@@ -514,14 +514,14 @@ async function drawRoute(startName, endName) {
 
   routeLine = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(pts),
-    new THREE.LineBasicMaterial({ color: 0xff0000 })
+    new THREE.LineBasicMaterial({ color: 0xfc0324 })
   );
   earth.add(routeLine);
 
 
   straightLine = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(pts2),
-    new THREE.LineBasicMaterial({ color: 0xff0000 })
+    new THREE.LineBasicMaterial({ color: 0xfce303 })
   );
   earth.add(straightLine);
 
@@ -667,6 +667,18 @@ function focusCameraOnRoute(start, end) {
   camProgress = 0; // Animation starten
 }
 
+ const explainBtn = document.getElementById("explainToggle");
+const explainBox = document.getElementById("explainBox");
+
+explainBtn.onclick = () => {
+  explainBox.classList.toggle("active");
+};
+
+
+
+
+
+
 const clock = new THREE.Clock();
 
 /* ---------------- Animation ---------------- */
@@ -686,7 +698,10 @@ function animate() {
   }
 
 
-  
+ 
+
+
+
 
   // Aktualisiere Label-Sichtbarkeit und -Größe basierend auf Zoom-Niveau
   if (countryLabelsGroup.visible) {

@@ -34,7 +34,7 @@ html, body {
   gap: 4px;
   
   padding: 2px 4px;
-  background: rgba(227, 226, 209, 0.55);
+  background: rgb(5, 5, 5);
   border-radius: 10px;
 
   max-width: calc(100vw - 16px);
@@ -55,6 +55,10 @@ html, body {
   border-radius: 6px;
   border: none;
 }
+/* 
+.flugroute-button{
+  background: rgb(71, 188, 25);
+} */
 
 /* Button */
 #ui button {
@@ -70,8 +74,11 @@ html, body {
   white-space: nowrap;
 }
 
+
+
+
 #ui button:hover {
-  background: rgb(29, 154, 227);
+  background: rgb(9, 53, 111);
 }
 /* Distanz */
 /* #dist {
@@ -95,6 +102,35 @@ html, body {
   align-items: center;
   justify-content: center;
 }
+
+
+#explainBox {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 40%;
+  overflow-y: auto;
+
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+
+  padding: 15px;
+  box-sizing: border-box;
+
+  font-family: sans-serif;
+  font-size: 16px;
+
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+}
+
+#explainBox.active {
+  transform: translateY(0);
+}
+
+
+
 
 
 

@@ -25,12 +25,41 @@
     <!-- <label>Ziel</label> -->
     <input id="end" type="text" value="Tokyo">
 
-    <button id="go">Route</button>
+    <button class="flugroute-button" id="go">Route</button>
 
     <button id="toggleCountries">Länder</button>
-    <span id="dist">– km</span>
+
     
+    <button id="explainToggle">Erklärung</button>
+    <span id="dist">– km</span>
+   
+  
   </div>
+
+  
+
+<div id="explainBox">
+  <h3>Warum sind Flugrouten gekrümmt?</h3>
+  <p>
+    Auf einer Kugel ist die kürzeste Verbindung zwischen zwei Punkten
+    ein <b>Großkreis</b>. Ein Großkreis entsteht als Schnitt einer Ebene
+    durch den Mittelpunkt der Erde.
+ 
+    Die rote Linie zeigt diesen Großkreis – also die kürzeste Strecke
+    auf der Erdoberfläche.
+
+    Die blaue Linie interpoliert Breiten- und Längengrade linear.
+    Das entspricht der „geraden“ Verbindung, wie sie in vielen Atlanten
+    (z.B. Mercator-Projektion) erscheint.
+  
+    Was auf einer flachen Karte gerade aussieht,
+    ist auf der Kugel meist nicht die kürzeste Verbindung.
+    IN einer Ebene gilt: „Die kürzeste Verbindung ist eine Gerade.“
+    Auf einer Kugel gilt: „Die kürzeste Verbindung ist ein Großkreis.“
+  </p>
+</div>
+
+      
 
   <!-- Three.js App -->
   <script type="module" src="./earth.js"></script>
