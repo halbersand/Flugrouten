@@ -112,7 +112,7 @@ html, body {
   max-height: 40%;
   overflow-y: auto;
 
-  background: rgba(0, 0, 0, 0.85);
+  /* background: rgba(0, 0, 0, 0.85); */
   color: white;
 
   padding: 15px;

@@ -1,3 +1,8 @@
-2026/02/19-10:54:20.921 f8df Reusing MANIFEST /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/shared_proto_db/MANIFEST-000001
-2026/02/19-10:54:20.922 f8df Recovering log #4
-2026/02/19-10:54:21.151 f8df Reusing old log /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/shared_proto_db/000004.log 
+2026/02/19-23:22:16.519 12cab Reusing MANIFEST /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/shared_proto_db/MANIFEST-000001
+2026/02/19-23:22:16.519 12cab Recovering log #4
+2026/02/19-23:22:16.520 12cab Level-0 table #7: started
+2026/02/19-23:22:16.585 12cab Level-0 table #7: 100853 bytes OK
+2026/02/19-23:22:16.586 12cab Recovering log #7
+2026/02/19-23:22:16.586 12cab Reusing old log /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/shared_proto_db/000007.log 
+2026/02/19-23:22:16.619 12cab Delete type=2 #8
+2026/02/19-23:22:16.619 12cab Delete type=0 #4

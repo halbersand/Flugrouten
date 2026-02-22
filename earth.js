@@ -474,27 +474,22 @@ async function geocode(place) {
 let routeLine = null;
 let straightLine = null;
 let objects = [];
-
+// let fullGreatcircle=null;
 let start=null;
 let end=null;
 
-// function getRouteCenter(lat1, lon1, lat2, lon2) {
-//     const v1 = latLonToVec3(lat1, lon1, 1);
-//     const v2 = latLonToVec3(lat2, lon2, 1);
-
-//     return v1.clone().add(v2).multiplyScalar(0.5).normalize();
-// }
-
-
-
-
-
+let startvec=null;
+let endvec=null;
 
 async function drawRoute(startName, endName) {
   objects.forEach(o => earth.remove(o));
   objects = [];
   if (routeLine) earth.remove(routeLine);
   if (straightLine) earth.remove(straightLine);
+  if (fullGreatCircle) earth.remove(fullGreatCircle);
+  if (greatCircleDisk) earth.remove(greatCircleDisk);
+  if (earthCenterMarker) earth.remove(earthCenterMarker);
+    
   const A = await geocode(startName);
   const B = await geocode(endName);
   start=A;
@@ -503,6 +498,10 @@ async function drawRoute(startName, endName) {
 
   const pA = latLonToVec3(A.lat, A.lon);
   const pB = latLonToVec3(B.lat, B.lon);
+  
+  startvec=pA;
+  endvec=pB;
+
 
   objects.push(createMarker(pA));
   objects.push(createMarker(pB));
@@ -511,25 +510,110 @@ async function drawRoute(startName, endName) {
 
   const pts = greatCirclePoints(A.lat, A.lon, B.lat, B.lon);
   const pts2 = straightLatLonLine(A.lat, A.lon, B.lat, B.lon);
-
+   
+  
   routeLine = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(pts),
     new THREE.LineBasicMaterial({ color: 0xfc0324 })
   );
   earth.add(routeLine);
-
+  
 
   straightLine = new THREE.Line(
     new THREE.BufferGeometry().setFromPoints(pts2),
     new THREE.LineBasicMaterial({ color: 0xfce303 })
   );
-  earth.add(straightLine);
+  // earth.add(straightLine);
 
 
   document.getElementById('dist').innerHTML =
     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
  focusCameraOnRoute(start, end);   
 }
+
+let fullGreatCircle;
+function createFullGreatCircle(startVec, endVec, radius = 1) {
+
+  const points = [];
+  const segments = 256;
+
+  // Normalenvektor der Großkreis-Ebene
+  const normal = new THREE.Vector3()
+    .crossVectors(startVec, endVec)
+    .normalize();
+
+  for (let i = 0; i <= segments; i++) {
+
+    const angle = (i / segments) * Math.PI * 2;
+
+    const point = startVec.clone()
+      .applyAxisAngle(normal, angle)
+      .setLength(radius * 1.01);
+
+    points.push(point);
+  }
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+  const material = new THREE.LineDashedMaterial({
+    color: 0xff0000,
+    dashSize: 0.07,
+    gapSize: 0.03
+  });
+
+  const circle = new THREE.Line(geometry, material);
+  circle.computeLineDistances();
+
+  return circle;
+}
+
+let greatCircleDisk;
+let earthCenterMarker;
+
+
+ function createGreatCircleDisk(startVec, endVec, radius = 1) {
+
+  // Normalenvektor der Ebene
+  const normal = new THREE.Vector3()
+    .crossVectors(startVec, endVec)
+    .normalize();
+
+  // Kreisgeometrie (nur innerhalb der Kugel!)
+  const geometry = new THREE.CircleGeometry(radius, 128);
+
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xff0000,
+    transparent: true,
+    opacity: 0.1,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    depthTest: false
+  });
+
+  const disk = new THREE.Mesh(geometry, material);
+
+  // Standard-Normaler von CircleGeometry ist (0,0,1)
+  const defaultNormal = new THREE.Vector3(0, 0, 1);
+
+  const quaternion = new THREE.Quaternion()
+    .setFromUnitVectors(defaultNormal, normal);
+
+  disk.quaternion.copy(quaternion);
+
+  return disk;
+}
+
+ function createEarthCenter() {
+
+  const geometry = new THREE.SphereGeometry(0.02, 32, 32);
+
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xffff00
+  });
+
+  return new THREE.Mesh(geometry, material);
+}
+
 
 /* ---------------- UI ---------------- */
 document.getElementById('go').onclick = () =>
@@ -670,10 +754,41 @@ function focusCameraOnRoute(start, end) {
  const explainBtn = document.getElementById("explainToggle");
 const explainBox = document.getElementById("explainBox");
 
-explainBtn.onclick = () => {
-  explainBox.classList.toggle("active");
-};
+// explainBtn.onclick = () => {
+//   explainBox.classList.toggle("active");
+//   earth.add(straightLine);
+//   fullGreatCircle = createFullGreatCircle(startvec,endvec);
+//    if (fullGreatCircle) earth.add(fullGreatCircle);
+//     greatCircleDisk = createGreatCircleDisk(startvec, endvec, 1);
+//    earth.add(greatCircleDisk);
+   
+//     earthCenterMarker = createEarthCenter();
+//     earth.add(earthCenterMarker);
+// };
 
+explainBtn.onclick = () => {
+
+  const active = explainBox.classList.toggle("active");
+
+  if (active && startvec && endvec) {
+
+    fullGreatCircle = createFullGreatCircle(startvec,endvec);
+    earth.add(fullGreatCircle);
+    greatCircleDisk = createGreatCircleDisk(startvec, endvec, 1);
+    earth.add(greatCircleDisk);
+    earthCenterMarker = createEarthCenter();
+    earth.add(earthCenterMarker);
+     earth.add(straightLine);
+    
+
+  } else {
+
+    if (greatCircleDisk) earth.remove(greatCircleDisk);
+    if (earthCenterMarker) earth.remove(earthCenterMarker);
+    if (straightLine) earth.remove(straightLine);
+    if (fullGreatCircle) earth.remove(fullGreatCircle);
+  }
+};
 
 
 
