@@ -526,10 +526,17 @@ async function drawRoute(startName, endName) {
   // earth.add(straightLine);
 
 
-  document.getElementById('dist').innerHTML =
+//   document.getElementById('dist').innerHTML =
+//     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
+//  focusCameraOnRoute(start, end);   
+
+ document.getElementById('distanz').innerHTML =
     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
- focusCameraOnRoute(start, end);   
-}
+ focusCameraOnRoute(start, end);  
+
+ }
+
+
 
 let fullGreatCircle;
 function createFullGreatCircle(startVec, endVec, radius = 1) {
