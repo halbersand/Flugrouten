@@ -536,6 +536,8 @@ async function drawRoute(startName, endName) {
   if (earthCenterMarker) earth.remove(earthCenterMarker);
   if (planeGreat) earth.remove(planeGreat);
    if (planeStraight) earth.remove(planeStraight);
+   if (labelStraight) earth.remove(labelStraight);
+
     
   const A = await geocode(startName);
   const B = await geocode(endName);
@@ -589,10 +591,15 @@ const straightLength = computeLineLength(straightPointsArray);
  straightKm = straightLength * 6371;
 
 
- document.getElementById('distanz').innerHTML =
-    `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
+//  document.getElementById('distanz').innerHTML =
+//     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
  focusCameraOnRoute(start, end);  
 
+const labelGreat = createLengthLabel(
+  `Großkreis: ${distance(start.lat, start.lon, end.lat, end.lon).toFixed(0)} km`,
+  midGreat
+);
+earth.add(labelGreat);
  }
 
 
@@ -881,16 +888,16 @@ flightActive = true;
 // );
 
 
- const labelGreat = createLengthLabel(
-  `Großkreis: ${distance(start.lat, start.lon, end.lat, end.lon).toFixed(0)} km`,
-  midGreat
-);
+//  const labelGreat = createLengthLabel(
+//   `Großkreis: ${distance(start.lat, start.lon, end.lat, end.lon).toFixed(0)} km`,
+//   midGreat
+// );
  labelStraight = createLengthLabel(
   `Straight: ${straightKm.toFixed(0)} km`,
   midStraight
 );
 
-earth.add(labelGreat);
+
 earth.add(labelStraight);
 
 
