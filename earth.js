@@ -858,8 +858,7 @@ flightProgress = 0;
 flightActive = true;
 
 
-    planeGreat = createPlane(0xff0000);
-planeStraight = createPlane(0x00aaff);
+ 
 
 earth.add(planeGreat);
 earth.add(planeStraight);
