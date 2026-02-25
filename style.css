@@ -49,7 +49,7 @@ canvas{
 /* Inputs */
 #ui input {
  
-  width: 80px;              /* 🔑 schmal */
+  width: 70px;              /* 🔑 schmal */
   max-width: 30vw;          /* 🔑 Mobile */
   padding: 6px 2px;
   font-size: 15px;
