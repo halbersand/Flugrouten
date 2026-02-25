@@ -480,6 +480,51 @@ let end=null;
 
 let startvec=null;
 let endvec=null;
+// Flugzeuganimation
+
+let greatCirclePointsArray=[];
+let straightPointsArray=[];
+let midStraight=null;
+let midGreat=null;
+let greatKm=null;
+let straightKm=null;
+function createLengthLabel(text, position) {
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = 512;
+  canvas.height = 128;
+
+  ctx.fillStyle = "white";
+  ctx.font = "28px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(text, 256, 80);
+
+  const texture = new THREE.CanvasTexture(canvas);
+
+  const material = new THREE.SpriteMaterial({ map: texture });
+
+  const sprite = new THREE.Sprite(material);
+  sprite.scale.set(0.8, 0.2, 1);
+  sprite.position.copy(position);
+
+  return sprite;
+}
+
+
+function computeLineLength(points) {
+
+  let length = 0;
+
+  for (let i = 1; i < points.length; i++) {
+    length += points[i - 1].distanceTo(points[i]);
+  }
+
+  return length;
+}
+
+
 
 async function drawRoute(startName, endName) {
   objects.forEach(o => earth.remove(o));
@@ -489,6 +534,8 @@ async function drawRoute(startName, endName) {
   if (fullGreatCircle) earth.remove(fullGreatCircle);
   if (greatCircleDisk) earth.remove(greatCircleDisk);
   if (earthCenterMarker) earth.remove(earthCenterMarker);
+  if (planeGreat) earth.remove(planeGreat);
+   if (planeStraight) earth.remove(planeStraight);
     
   const A = await geocode(startName);
   const B = await geocode(endName);
@@ -523,12 +570,24 @@ async function drawRoute(startName, endName) {
     new THREE.BufferGeometry().setFromPoints(pts2),
     new THREE.LineBasicMaterial({ color: 0xfce303 })
   );
-  // earth.add(straightLine);
 
+  greatCirclePointsArray = greatCirclePoints(start.lat, start.lon, end.lat, end.lon);
+straightPointsArray = straightLatLonLine(start.lat, start.lon, end.lat, end.lon);  
 
-//   document.getElementById('dist').innerHTML =
-//     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
-//  focusCameraOnRoute(start, end);   
+midGreat = greatCirclePointsArray[
+  Math.floor(greatCirclePointsArray.length / 2)
+].clone().multiplyScalar(1.05);
+
+ midStraight = straightPointsArray[
+  Math.floor(straightPointsArray.length / 2)
+].clone().multiplyScalar(1.1);
+
+const greatLength = computeLineLength(greatCirclePointsArray);
+const straightLength = computeLineLength(straightPointsArray);
+
+ greatKm = greatLength * 6371;
+ straightKm = straightLength * 6371;
+
 
  document.getElementById('distanz').innerHTML =
     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
@@ -761,23 +820,53 @@ function focusCameraOnRoute(start, end) {
  const explainBtn = document.getElementById("explainToggle");
 const explainBox = document.getElementById("explainBox");
 
-// explainBtn.onclick = () => {
-//   explainBox.classList.toggle("active");
-//   earth.add(straightLine);
-//   fullGreatCircle = createFullGreatCircle(startvec,endvec);
-//    if (fullGreatCircle) earth.add(fullGreatCircle);
-//     greatCircleDisk = createGreatCircleDisk(startvec, endvec, 1);
-//    earth.add(greatCircleDisk);
-   
-//     earthCenterMarker = createEarthCenter();
-//     earth.add(earthCenterMarker);
-// };
+
+
+
+function createPlane(color) {
+
+  const geometry = new THREE.ConeGeometry(0.03, 0.1, 16);
+  const material = new THREE.MeshBasicMaterial({ color });
+
+  const plane = new THREE.Mesh(geometry, material);
+
+  return plane;
+}
+
+let planeGreat;
+let planeStraight;
+let flightProgress = 0;
+let flightActive = false;
+let labelStraight;
 
 explainBtn.onclick = () => {
 
   const active = explainBox.classList.toggle("active");
 
+
+
+
   if (active && startvec && endvec) {
+    
+planeGreat = createPlane(0xff0000);
+planeStraight = createPlane(0x00aaff);
+
+earth.add(planeGreat);
+earth.add(planeStraight);
+
+flightProgress = 0;
+flightActive = true;
+
+
+    planeGreat = createPlane(0xff0000);
+planeStraight = createPlane(0x00aaff);
+
+earth.add(planeGreat);
+earth.add(planeStraight);
+
+flightProgress = 0;
+flightActive = true;
+
 
     fullGreatCircle = createFullGreatCircle(startvec,endvec);
     earth.add(fullGreatCircle);
@@ -787,6 +876,24 @@ explainBtn.onclick = () => {
     earth.add(earthCenterMarker);
      earth.add(straightLine);
     
+//     const labelGreat = createLengthLabel(
+//   `Großkreis: ${greatKm.toFixed(0)} km`,
+//   midGreat
+// );
+
+
+ const labelGreat = createLengthLabel(
+  `Großkreis: ${distance(start.lat, start.lon, end.lat, end.lon).toFixed(0)} km`,
+  midGreat
+);
+ labelStraight = createLengthLabel(
+  `Straight: ${straightKm.toFixed(0)} km`,
+  midStraight
+);
+
+earth.add(labelGreat);
+earth.add(labelStraight);
+
 
   } else {
 
@@ -794,6 +901,9 @@ explainBtn.onclick = () => {
     if (earthCenterMarker) earth.remove(earthCenterMarker);
     if (straightLine) earth.remove(straightLine);
     if (fullGreatCircle) earth.remove(fullGreatCircle);
+    if (labelStraight) earth.remove(labelStraight);
+    if (planeGreat) earth.remove(planeGreat);
+    if (planeStraight) earth.remove(planeStraight);
   }
 };
 
@@ -806,9 +916,7 @@ const clock = new THREE.Clock();
 /* ---------------- Animation ---------------- */
 function animate() {
   requestAnimationFrame(animate);
-
   const delta = clock.getDelta();
-
   // Kamera-Transition
   if (camProgress < 1) {
 
@@ -819,12 +927,6 @@ function animate() {
 
   }
 
-
- 
-
-
-
-
   // Aktualisiere Label-Sichtbarkeit und -Größe basierend auf Zoom-Niveau
   if (countryLabelsGroup.visible) {
     updateCountryLabelVisibility();
@@ -832,9 +934,32 @@ function animate() {
   
   // Aktualisiere die Größe aller Route-Labels
   updateAllLabelScale();
-  controls.update();
-  
+  controls.update();  
   renderer.render(scene, camera);
+ 
+
+ 
+if (flightActive) {
+
+  flightProgress += 0.002; // Geschwindigkeit
+
+  const indexGreat = Math.floor(flightProgress * (greatCirclePointsArray.length - 1));
+  const indexStraight = Math.floor(flightProgress * (straightPointsArray.length - 1));
+
+  if (indexGreat < greatCirclePointsArray.length) {
+    planeGreat.position.copy(greatCirclePointsArray[indexGreat]);
+  }
+
+  if (indexStraight < straightPointsArray.length) {
+    planeStraight.position.copy(straightPointsArray[indexStraight]);
+  }
+
+  if (indexGreat >= greatCirclePointsArray.length - 1) {
+    flightActive = false; // stoppen wenn Großkreis angekommen
+  }
+}
+
+
   
 }
 animate();

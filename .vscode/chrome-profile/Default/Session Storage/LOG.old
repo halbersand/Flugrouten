@@ -1,4 +1,4 @@
-2026/02/19-23:19:26.180 4 Reusing MANIFEST /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/MANIFEST-000001
-2026/02/19-23:19:26.184 4 Recovering log #3
-2026/02/19-23:19:26.184 4 (ignoring error) /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/000003.log: dropping 322 bytes; Corruption: checksum mismatch
-2026/02/19-23:19:26.184 4 Reusing old log /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/000003.log 
+2026/02/25-10:45:02.355 4 Reusing MANIFEST /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/MANIFEST-000001
+2026/02/25-10:45:02.363 4 Recovering log #3
+2026/02/25-10:45:02.363 4 (ignoring error) /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/000003.log: dropping 6004 bytes; Corruption: checksum mismatch
+2026/02/25-10:45:02.365 4 Reusing old log /home/macmint/Schreibtisch/three.js-flugroute2/.vscode/chrome-profile/Default/Session Storage/000003.log 
