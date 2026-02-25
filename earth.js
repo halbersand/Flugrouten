@@ -537,6 +537,7 @@ async function drawRoute(startName, endName) {
   if (planeGreat) earth.remove(planeGreat);
    if (planeStraight) earth.remove(planeStraight);
    if (labelStraight) earth.remove(labelStraight);
+    if (labelGreat) earth.remove(labelGreat);
 
     
   const A = await geocode(startName);
@@ -595,7 +596,7 @@ const straightLength = computeLineLength(straightPointsArray);
 //     `<br> ${distance(A.lat, A.lon, B.lat, B.lon).toFixed(0)} km`;
  focusCameraOnRoute(start, end);  
 
-const labelGreat = createLengthLabel(
+ labelGreat = createLengthLabel(
   `Großkreis: ${distance(start.lat, start.lon, end.lat, end.lon).toFixed(0)} km`,
   midGreat
 );
@@ -845,6 +846,7 @@ let planeStraight;
 let flightProgress = 0;
 let flightActive = false;
 let labelStraight;
+let labelGreat;
 
 explainBtn.onclick = () => {
 
@@ -907,6 +909,7 @@ earth.add(labelStraight);
     if (earthCenterMarker) earth.remove(earthCenterMarker);
     if (straightLine) earth.remove(straightLine);
     if (fullGreatCircle) earth.remove(fullGreatCircle);
+    
     if (labelStraight) earth.remove(labelStraight);
     if (planeGreat) earth.remove(planeGreat);
     if (planeStraight) earth.remove(planeStraight);
