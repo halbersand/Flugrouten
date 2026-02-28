@@ -69,7 +69,7 @@ window.addEventListener('resize', resizeRenderer);
 
 //const colorsun = new THREE.Color("rgba(121, 175, 219, 1)");
 /* ---------------- Licht ---------------- */
-scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+scene.add(new THREE.AmbientLight(0xffffff, 1.8));
 const sun = new THREE.DirectionalLight(0xffffff, 1.4);
 sun.position.set(5, 3, 5);
 scene.add(sun);
@@ -747,16 +747,16 @@ function updateCountryLabelVisibility() {
     minCountrySize = 50;  // Nur sehr große Länder
   } else if (cameraDistance > 2.0) {
     minCountrySize = 25;  // Große Länder
-  } else if (cameraDistance > 1.5) {
-    minCountrySize = 10;  // Mittlere Länder
+  } else if (cameraDistance > 1.2) {
+    minCountrySize = 5;  // Mittlere Länder
   } else {
-    minCountrySize = 2;   // Alle Länder
+    minCountrySize = 0.3;   // Alle Länder
   }
   
   // Begrenzen Sie die Label-Größe basierend auf Kameradistanz und Landesgröße
   // Bei Distanz 3.0: maximale Größe = 1.5
   // Je näher die Kamera kommt, desto mehr wird die Größe begrenzt
-  let maxScale = Math.max(0.4, Math.min(1.5, cameraDistance / 2.5));
+  let maxScale = Math.max(0.7, Math.min(1.5, cameraDistance / 2.5));
   
   countryLabelsGroup.children.forEach(sprite => {
     // Sichtbarkeit nur wenn Land groß genug UND auf der sichtbaren Hemisphäre
@@ -858,7 +858,7 @@ explainBtn.onclick = () => {
   if (active && startvec && endvec) {
     
 planeGreat = createPlane(0xff0000);
-planeStraight = createPlane(0x00aaff);
+planeStraight = createPlane(0xfce303);
 
 earth.add(planeGreat);
 earth.add(planeStraight);
@@ -895,7 +895,7 @@ flightActive = true;
 //   midGreat
 // );
  labelStraight = createLengthLabel(
-  `Straight: ${straightKm.toFixed(0)} km`,
+  `Atlasroute: ${straightKm.toFixed(0)} km`,
   midStraight
 );
 
@@ -950,7 +950,7 @@ function animate() {
  
 if (flightActive) {
 
-  flightProgress += 0.002; // Geschwindigkeit
+  flightProgress += 0.001; // Geschwindigkeit
 
   const indexGreat = Math.floor(flightProgress * (greatCirclePointsArray.length - 1));
   const indexStraight = Math.floor(flightProgress * (straightPointsArray.length - 1));
