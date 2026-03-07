@@ -857,23 +857,23 @@ explainBtn.onclick = () => {
 
   if (active && startvec && endvec) {
     
-planeGreat = createPlane(0xff0000);
-planeStraight = createPlane(0xfce303);
+// planeGreat = createPlane(0xff0000);
+// planeStraight = createPlane(0xfce303);
 
-earth.add(planeGreat);
-earth.add(planeStraight);
+// earth.add(planeGreat);
+// earth.add(planeStraight);
 
-flightProgress = 0;
-flightActive = true;
+// flightProgress = 0;
+// flightActive = true;
 
 
  
 
-earth.add(planeGreat);
-earth.add(planeStraight);
+// earth.add(planeGreat);
+// earth.add(planeStraight);
 
 flightProgress = 0;
-flightActive = true;
+flightActive = false;
 
 
     fullGreatCircle = createFullGreatCircle(startvec,endvec);
